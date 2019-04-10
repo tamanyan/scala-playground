@@ -1,5 +1,8 @@
 package example
 
+import scala.math.{abs, max}
+import scala.util.control.Breaks._
+
 class ListNode(var _x: Int = 0) {
   var next: ListNode = null
   var x: Int = _x
@@ -56,8 +59,37 @@ object Solution {
       return ans
     }
 
+    abstract class Notification
+
+    case class Email(sender: String, title: String, body: String) extends Notification
+
+    case class SMS(caller: String, message: String) extends Notification
+
+    case class VoiceRecording(contactName: String, link: String) extends Notification
+
     def lengthOfLongestSubstring(s: String): Int = {
-      return 0
+      val slist = s.toList
+      var maxValue = 0
+
+      for (i <- 0 until slist.length) {
+        var m: Set[Char] = Set()
+        var len = 0
+
+        breakable {
+          for (j <- i until slist.length) {
+            val char = s(j)
+
+            if (m.contains(char)) break
+
+            m += char
+            len += 1
+            maxValue = max(maxValue, len)
+            // println(m)
+          }
+        }
+      }
+
+      return maxValue
     }
 }
 
@@ -75,6 +107,8 @@ object Hello extends Greeting with App {
   // l2.next.next.next = new ListNode(9)
   // println(Solution.addTwoNumbers(l1, l2))
   println(Solution.lengthOfLongestSubstring("abcabcbb"))
+  println(Solution.lengthOfLongestSubstring("bbbbb"))
+  println(Solution.lengthOfLongestSubstring("pwwkew"))
 }
 
 trait Greeting {
