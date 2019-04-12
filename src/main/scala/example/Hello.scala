@@ -59,44 +59,105 @@ object Solution {
       return ans
     }
 
-    abstract class Notification
-
-    case class Email(sender: String, title: String, body: String) extends Notification
-
-    case class SMS(caller: String, message: String) extends Notification
-
-    case class VoiceRecording(contactName: String, link: String) extends Notification
-
     def lengthOfLongestSubstring(s: String): Int = {
-      val slist = s.toList
-      var maxValue = 0
+      var m: Set[Char] = Set()
+      var (ans, i, j, n) = (0, 0, 0, s.length)
 
-      for (i <- 0 until slist.length) {
-        var m: Set[Char] = Set()
-        var len = 0
+      while (i < n && j < n) {
+        val char = s.charAt(j)
 
-        breakable {
-          for (j <- i until slist.length) {
-            val char = s(j)
+        if (m.contains(char)) {
+          ans = max(ans, j - i)
+          m -= s.charAt(i)
+          i += 1
+        } else {
+          m += char
+          j += 1
+        }
+      }
 
-            if (m.contains(char)) break
+      // for (i <- 0 until slist.length) {
+      //   var m: Set[Char] = Set()
+      //   var len = 0
 
-            m += char
-            len += 1
-            maxValue = max(maxValue, len)
-            // println(m)
+      //   breakable {
+      //     for (j <- i until slist.length) {
+      //       val char = s(j)
+
+      //       if (m.contains(char)) break
+
+      //       m += char
+      //       len += 1
+      //       maxValue = max(maxValue, len)
+      //       // println(m)
+      //     }
+      //   }
+      // }
+
+      return ans
+    }
+
+    def longestPalindrome(s: String): String = {
+      val n = s.length
+      var ans = ""
+
+      for (i <- 0 until n) {
+        val c = s.charAt(i)
+
+        val c1 = i - 1 match {
+          case x if (x >= 0 && x <= n) => s.charAt(x)
+          case _ => null
+        }
+
+        val c2 = i - 2 match {
+          case x if (x >= 0 && x <= n) => s.charAt(x)
+          case _ => null
+        }
+
+        if (c == c1) {
+          for (j <- 1 until n - i) {
+            breakable {
+            }
+          }
+        } else if (c == c2 || c == c1) {
+          breakable {
+            for (j <- 1 until n - i) {
+              val next = i + j
+              val prev = i - j - 2
+
+              if (next > i + j || prev < 0) {
+                break
+              }
+
+              if (s.charAt(prev) != s.charAt(next)) {
+                val substr = s.slice(prev + 1, next)
+
+                if (ans.length <= substr.length) {
+                  ans = substr
+                }
+
+                break
+              }
+
+              val substr = s.slice(prev, next + 1)
+              if (ans.length <= substr.length) {
+                ans = substr
+              }
+            }
           }
         }
       }
 
-      return maxValue
+      return ans
     }
 }
 
 object Hello extends Greeting with App {
+  // No. 1
   // val sol = Solution.twoSum(Array(1, 2, 3), 5)
   // println(sol.mkString(","))
 
+  // No. 2
   // val l1 = new ListNode(5)
   // l1.next = new ListNode(4)
   // l1.next.next = new ListNode(3)
@@ -106,9 +167,15 @@ object Hello extends Greeting with App {
   // l2.next.next = new ListNode(4)
   // l2.next.next.next = new ListNode(9)
   // println(Solution.addTwoNumbers(l1, l2))
-  println(Solution.lengthOfLongestSubstring("abcabcbb"))
-  println(Solution.lengthOfLongestSubstring("bbbbb"))
-  println(Solution.lengthOfLongestSubstring("pwwkew"))
+
+  // No. 3
+  // println(Solution.lengthOfLongestSubstring("abcabcbb"))
+  // println(Solution.lengthOfLongestSubstring("bbbbb"))
+  // println(Solution.lengthOfLongestSubstring("pwwkew"))
+
+  println(Solution.longestPalindrome("babad"))
+  println(Solution.longestPalindrome("caabaadns"))
+  println(Solution.longestPalindrome("caaaadnddddd"))
 }
 
 trait Greeting {
